@@ -28,7 +28,6 @@ namespace WindowsFormsApp1
         bool CapInProg;
 
        
-        //ovo u LOADTRAIN uvrstiti
         string TrainDataPath2 = @"D:\gtsrb train\20";
         string TrainDataPath3 = @"D:\gtsrb train\30";
         string TrainDataPath5 = @"D:\gtsrb train\50";
@@ -85,7 +84,7 @@ namespace WindowsFormsApp1
         public PrepoznavanjeZnakova()
         {
             InitializeComponent();
-            pyEngine = Python.CreateEngine();//ovo dvoje za inicijalizaciju
+            pyEngine = Python.CreateEngine();   
             pyScope = pyEngine.CreateScope();
         }
 
@@ -162,7 +161,7 @@ namespace WindowsFormsApp1
 
         private async void Filters_Click(object sender, EventArgs e)
         {
-            if (objektSvuda == null) //provjerimo je li objekt tu, odnosno je li slika izabrana/snimljena
+            if (objektSvuda == null)          
             {
                 return;
             }
@@ -235,7 +234,7 @@ namespace WindowsFormsApp1
             string[] files9 = Directory.GetFiles(TrainDataPath9, "*.ppm", SearchOption.AllDirectories);
             string[] files10 = Directory.GetFiles(TrainDataPath10, "*.ppm", SearchOption.AllDirectories);
             string[] files12 = Directory.GetFiles(TrainDataPath12, "*.ppm", SearchOption.AllDirectories);
-            FolderFilter(files2, 2, TrainDataList, TrainLabelList); //bili 10 i 200 svuda filteri
+            FolderFilter(files2, 2, TrainDataList, TrainLabelList);      
             FolderFilter(files3, 3,  TrainDataList, TrainLabelList);
             FolderFilter(files5, 5,  TrainDataList, TrainLabelList);
             FolderFilter(files6, 6,  TrainDataList, TrainLabelList);
@@ -269,7 +268,7 @@ namespace WindowsFormsApp1
         public float[] GetVector(Image<Gray, Byte> im)
         {
           
-            HOGDescriptor hog = new HOGDescriptor(new Size(48, 48), new Size(16, 16), new Size(8,8), new Size(8,8)); ;    // with defaults values
+            HOGDescriptor hog = new HOGDescriptor(new Size(48, 48), new Size(16, 16), new Size(8,8), new Size(8,8)); ;       
             Image<Gray, byte> imageOfInterest = Resize1(im);
             imageOfInterest= imageOfInterest.SmoothGaussian(3, 3, 0, 0);
             CvInvoke.MedianBlur(imageOfInterest, imageOfInterest, 5);
@@ -282,7 +281,7 @@ namespace WindowsFormsApp1
             try
             {
                 int FirstDim = source.Length;
-                int SecondDim = source.GroupBy(row => row.Length).Single().Key; // throws InvalidOperationException if source is not rectangular
+                int SecondDim = source.GroupBy(row => row.Length).Single().Key;        
 
                 var result = new T[FirstDim, SecondDim];
                 for (int i = 0; i < FirstDim; ++i)
@@ -311,17 +310,12 @@ namespace WindowsFormsApp1
                 else
                 {
                     svm = new SVM();
-                   // TrainData traindata = new TrainData(TrainsData, DataLayoutType.RowSample, TrainsLabel);
                     svm.C = 100;
                     svm.Type = SVM.SvmType.CSvc;
                     svm.Gamma =0.1;
-                    //0.02 je 89, 0.05 je 88
-                   // svm.Gamma = 0.09; 0.844 u kombinciji sa c=5
                     svm.SetKernel(SVM.SvmKernelType.Rbf);
-                   // svm.Degree = 1;
                     svm.TermCriteria = new MCvTermCriteria(1000, 1e-6);
                     svm.Train(TrainsData, Emgu.CV.ML.MlEnum.DataLayoutType.RowSample, TrainsLabel);
-                   // svm.TrainAuto(traindata,20);
                     svm.Save("svmGtsrb.txt");
                     
                    
@@ -330,8 +324,6 @@ namespace WindowsFormsApp1
 
 
             }
-            //stanjit sve male slike ostavit ili obrnuto
-            //normalizacija
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -346,8 +338,6 @@ namespace WindowsFormsApp1
             trainList.Add(prvi);
 
             TestsData = new Matrix<float>(To2D<float>(trainList.ToArray()));
-            //MessageBox.Show(TestsData.Rows.ToString());
-
             if (TestsData == null)
             {
                 return;
@@ -355,7 +345,7 @@ namespace WindowsFormsApp1
            
             if (svm == null && svmMastif==null)
             {
-                return;//ako nije treniran ne radi nista
+                return;     
             }
             try
             {
@@ -403,7 +393,6 @@ namespace WindowsFormsApp1
                     {
                         picBoxExtractNum1.Image = Properties.Resources._120;
                     }
-                    // kao da u message/picbox pokaze sliku koju je labelovo if (predict==)
                 }
                 if (svmMastif != null)
                 {
@@ -450,7 +439,6 @@ namespace WindowsFormsApp1
             int i = 0;
             countDetectedTest = 0;
             int ct2 = 0, ct3 = 0, ct5 = 0, ct6 = 0, ct7 = 0, ct8 = 0, ct9 = 0, ct10 = 0, ct12 = 0;
-           //svi su skupa, mora otvarat txt file listu i redom svaki broj dodavat slici iz folder
            string[] files = Directory.GetFiles(TestDataPath, "*.ppm", SearchOption.AllDirectories);
             foreach (var file in files)
             {
@@ -462,7 +450,6 @@ namespace WindowsFormsApp1
             foreach(string s in ReadLabel)
             {
                 TestLabelList.Add(Convert.ToInt32(s)); 
-                // stavlja u test
             }
 
            foreach(int b in TestLabelList)
@@ -483,15 +470,13 @@ namespace WindowsFormsApp1
            
             TestsLabel = new Matrix<int>(TestLabelList.ToArray());
        
-            //MessageBox.Show(" 20:" + ct2.ToString() + " 30:" + ct3.ToString() + " 50:" + ct5.ToString() + " 60:" + ct6.ToString() + " 70:" + ct7.ToString() + " 80:" + ct8.ToString() + " 90:" + ct9.ToString() + " 100:" + ct10.ToString() + " 120:" + ct12.ToString());
-
             if (TestsData == null)
             {
                 return;
             }
             if (svm == null)
             {
-                return;//ako nije treniran ne radi nista
+                return;     
             }
             try
             {
@@ -506,8 +491,6 @@ namespace WindowsFormsApp1
                     InputTest.Text = "Loaded Picture:" + TestsLabel[i, 0].ToString() + "0";
                    
                     label1.Text = "Recognized speed sign:" + predict.ToString() + "0";
-                   // await Task.Delay(1000);
-
                     if (predict == TestsLabel[i, 0])
                     {
                         counterPredicted++;
@@ -559,7 +542,6 @@ namespace WindowsFormsApp1
 
 
                 SVMacc.Text = "Recognition accuracy:" + (counterPredicted / (float)TestsData.Rows);
-                // if petlje i broji sve iz txt fila koliko i ima po klasi
                 lbl4.Text = "30:" + c3 + ":" + ct3;
                 lbl3.Text = "20:" + c2 + ":" + ct2;
                 lbl5.Text = "50:" + c5 + ":" + ct5;
@@ -608,7 +590,6 @@ namespace WindowsFormsApp1
                 TrainDataList.Add(filteri(fileImage));
                 TrainLabelList.Add(3);
                 ct3++;
-               // await Task.Delay(1000);
             }
             foreach (var file in files4)
             {
@@ -616,7 +597,6 @@ namespace WindowsFormsApp1
                 TrainDataList.Add(filteri(fileImage));
                 TrainLabelList.Add(4);
                 ct4++;
-               // await Task.Delay(1000);
             }
             foreach (var file in files5)
             {
@@ -624,7 +604,6 @@ namespace WindowsFormsApp1
                 TrainDataList.Add(filteri(fileImage));
                 TrainLabelList.Add(5);
                 ct5++;
-                //await Task.Delay(1000);
             }
             foreach (var file in files6)
             {
@@ -632,7 +611,6 @@ namespace WindowsFormsApp1
                 TrainDataList.Add(filteri(fileImage));
                 TrainLabelList.Add(6);
                 ct6++;
-               // await Task.Delay(1000);
             }
             foreach (var file in files7)
             {
@@ -640,14 +618,10 @@ namespace WindowsFormsApp1
                 TrainDataList.Add(filteri(fileImage));
                 TrainLabelList.Add(7);
                 ct7++;
-                //await Task.Delay(1000);
             }
 
             TestsDataM = new Matrix<float>(To2D<float>(TrainDataList.ToArray()));
-            //MessageBox.Show(TestsData.Rows.ToString());
             TestsLabelM = new Matrix<int>(TrainLabelList.ToArray());
-            //MessageBox.Show(TestsLabel.Rows.ToString());
-
 
             if (TestsDataM == null)
             {
@@ -655,7 +629,7 @@ namespace WindowsFormsApp1
             }
             if (svmMastif == null)
             {
-                return;//ako nije treniran ne radi nista
+                return;     
             }
             try
             {
@@ -665,8 +639,6 @@ namespace WindowsFormsApp1
                 {
                     Matrix<float> row = TestsDataM.GetRow(i);
                     float predict = svmMastif.Predict(row, null);
-                    //Image<Gray, Byte> imout = TestsData.GetRow(counter).Mat.Reshape(0, 28).ToImage<Gray, Byte>().ThresholdBinary(new Gray(30), new Gray(255));
-                    // pictureBox1.Image = imout.Bitmap;
                     InputTest.Text = "Loaded image:" + TestsLabelM[i, 0].ToString() + "0";
                     label1.Text = "Recognized sign:" + predict.ToString() + "0";
 
@@ -731,7 +703,6 @@ namespace WindowsFormsApp1
                     var fileName = System.IO.Path.GetFileName(extensionLoad.FileName);
                     ScriptSource ss = pyEngine.CreateScriptSourceFromFile(fileName);
                     ss.Execute(pyScope);
-                    //dynamic Function = pyScope.GetVariable("RunIme_Click");// želimo ga odmah runnati na pritisak gumba
                     dynamic addExtensions = pyScope.GetVariable("LoadExtension");
                     addExtensions(this);
 
@@ -753,20 +724,14 @@ namespace WindowsFormsApp1
                 }
                 else
                 {
-                    //nesto ne valja u kodu auto, oni cv_32s fale
                     svmMastif = new SVM();
 
-                    // TrainData traindata = new TrainData(TrainsData, DataLayoutType.RowSample, TrainsLabel);
                     svmMastif.C = 100;
                     svmMastif.Type = SVM.SvmType.CSvc;
                     svmMastif.Gamma = 0.1;
-                    //0.02 je 89, 0.05 je 88
-                    // svm.Gamma = 0.09; 0.844 u kombinciji sa c=5
                     svmMastif.SetKernel(SVM.SvmKernelType.Rbf);
-                    // svm.Degree = 1;
                     svmMastif.TermCriteria = new MCvTermCriteria(1000, 1e-6);
                     svmMastif.Train(TrainsDataM, Emgu.CV.ML.MlEnum.DataLayoutType.RowSample, TrainsLabelM);
-                    // svm.TrainAuto(traindata,20);
                     svmMastif.Save("svmMastif.txt");
 
 
