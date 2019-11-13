@@ -484,7 +484,6 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "PrepoznavanjeZnakova";
             this.Text = "The speed limit road sign recognition";
-            this.Load += new System.EventHandler(this.PrepoznavanjeZnakova_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxExtractNum1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.yoloItemBindingSource)).EndInit();

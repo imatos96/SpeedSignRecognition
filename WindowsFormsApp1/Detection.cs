@@ -17,7 +17,6 @@ namespace WindowsFormsApp1
 {
     class Detection
     {
-
         public Image<Gray, byte> OriginalImg;
         public bool counter;
         public Detection(Image<Gray, byte> grayImg)

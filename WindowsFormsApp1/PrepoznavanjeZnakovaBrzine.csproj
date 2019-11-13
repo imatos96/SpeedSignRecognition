@@ -187,6 +187,7 @@
     <None Include="Resources\90.png" />
     <None Include="Resources\100.jpg" />
     <None Include="Resources\120.png" />
+    <None Include="Resources\testLabelReal.txt" />
     <Content Include="vcruntime140.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
